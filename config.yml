@@ -1,0 +1,27 @@
+defaults:
+  ttl: "1"
+  lexer: "auto"
+  burn: "-1"
+
+paste_limits:
+  ttl_max: 731
+  ttl_min: 0
+  burn_max: 1000
+  burn_min: 1
+
+token_len: 6
+
+max_content_length: 2097152
+
+db_dsn: "host=localhost port=5432 dbname='pastebin' user='pastebin' password='1234'"
+
+url_len: 8
+url_alph: "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghkmnpqrstuvwxyz"
+
+return_messages:
+  empty_paste: "pls, actually paste something k?\n"
+  invalid_ttl: "ttl must be between {} and {} hours.\n"
+  msg_invalid_burn: "burn count must be between {} and {}.\n"
+  err_404: "404 - Not Found.\n"
+  err_401: "401 - Unauthorized - check your delete token.\n"
+  paste_deleted: "paste deleted successfully.\n"

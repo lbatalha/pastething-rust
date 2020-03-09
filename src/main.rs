@@ -2,50 +2,25 @@
 use listenfd::ListenFd;
 use actix_web::{web, App, HttpRequest, Error, HttpResponse, HttpServer, Result, Responder};
 use actix_files;
-use askama::Template;
 
-
-#[derive(Template)]
-#[template(path = "about.html", print = "none")]
-struct AboutTemplate {
-    direction: &'static str,
-    year: &'static str,
-}
-
-async fn about_page(_: HttpRequest) -> impl Responder {
-    let s = AboutTemplate {
-        direction: "ltr",
-        year: "2020",
-    }.render().unwrap();
-    HttpResponse::Ok().content_type("text/html").body(s)
-}
-
-#[derive(Template)]
-#[template(path = "api.html", print = "none")]
-struct AboutApiTemplate<'a> {
-    direction: &'a str,
-    year: &'a str,
-}
-
-
-async fn about_api_page(_: HttpRequest) -> impl Responder {
-    let s = AboutApiTemplate {
-        direction: "ltr",
-        year: "2020",
-    }.render().unwrap();
-    HttpResponse::Ok().content_type("text/html").body(s)
-}
-
+mod templates;
+mod config;
 
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    let config: config::Config = match config::read_config(){
+        Ok(config) => config,
+        Err(e) => panic!(format!("Error reading config file: {}", e.to_string())),
+    };
+    println!("deserialized = {:#?}", config);
+    println!("{:?}", config.token_len);
     // At some point get rid of all this crap, auto-builds only needed during early development
     let mut listenfd = ListenFd::from_env();
     let mut server = HttpServer::new(|| {
         App::new()
-            .route("/about", web::get().to(about_page))
-            .route("/about/api", web::get().to(about_api_page))
+            .route("/about", web::get().to(templates::about_page))
+            .route("/about/api", web::get().to(templates::about_api_page))
             .service(actix_files::Files::new("/static", "./static"))
     });
 

@@ -1,11 +1,17 @@
-//use std::collections::HashMap;
+#[macro_use]
+extern crate diesel;
+
+use chrono::NaiveDateTime;
 use listenfd::ListenFd;
+
 use actix_web::{web, App, HttpRequest, Error, HttpResponse, HttpServer, Result, Responder};
 use actix_files;
 
 mod templates;
 mod config;
-
+mod db;
+mod schema;
+mod models;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -15,6 +21,7 @@ async fn main() -> std::io::Result<()> {
     };
     println!("deserialized = {:#?}", config);
     println!("{:?}", config.token_len);
+    let conn = db::establish_connection(&config.db_dsn.unwrap());
     // At some point get rid of all this crap, auto-builds only needed during early development
     let mut listenfd = ListenFd::from_env();
     let mut server = HttpServer::new(|| {

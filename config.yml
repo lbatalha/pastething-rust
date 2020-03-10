@@ -13,7 +13,7 @@ token_len: 6
 
 max_content_length: 2097152
 
-db_dsn: "host=localhost port=5432 dbname='pastebin' user='pastebin' password='1234'"
+db_dsn: "postgres://pastebin:@localhost/pastebin"
 
 url_len: 8
 url_alph: "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghkmnpqrstuvwxyz"

@@ -10,7 +10,7 @@ table! {
     pastes (pasteid) {
         pasteid -> Varchar,
         token -> Varchar,
-        lexer -> Varchar,
+        lexer -> Nullable<Varchar>,
         expiration -> Timestamp,
         burn -> Int4,
         paste -> Text,
